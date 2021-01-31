@@ -8,9 +8,28 @@
             <div class="user-profile__follower-count">
                 <strong>Followers: </strong> {{followers}}
             </div>
+            <form class="user-profile__create-twoot">
+                <label for="newTwoot"><strong>New Twoot</strong></label>
+                <textarea id="newTwoot" rows="4" v-model="newTwootContent"/>
+
+                <div class="user-profile__create-twoot-type">
+                    <label for="newTwootType"><strong>Type: </strong></label>
+                    <select id="newTwootType" v-model="selectedTwootType">
+                        <option :value="option.value" v-for="(option, index) in twootTypes" :key="index">
+                            {{option.name}}
+                        </option>
+                    </select>
+                </div> 
+            </form>
         </div>
         <div class="user-profile__twoots-wrapper">
-            <twootItem v-for="twoot in user.twoots" :key="twoot.id" :username="user.username" :twoot="twoot" />
+            <twootItem
+                v-for="twoot in user.twoots" 
+                :key="twoot.id" 
+                :username="user.username" 
+                :twoot="twoot" 
+                @favourite="toggleFavourite" 
+            />
         </div>
     </div>
 </template>
@@ -23,6 +42,13 @@ export default {
   components: {TwootItem},
   data() {
     return {
+        newTwootContent: '',
+        selectedTwootType: 'instant',
+        twootTypes: [
+            { value: 'draft', name: 'Draft'},
+            { value: 'instant', name: 'Instant Twoot'}
+
+        ],
       followers: 0,
       user: {
         id: 1,
@@ -54,6 +80,9 @@ export default {
   methods: {
     followUser() {
       this.followers++
+    },
+    toggleFavourite(id) {
+        console.log(`Favourited Tweet #${id}`)
     }
   },
   mounted() {
@@ -87,10 +116,23 @@ export default {
     margin-right: auto;
     padding: 5px;
     font-weight: bold;
+    margin-bottom: 20px;
 }
 
 h1 {
     margin: 0;
+}
+
+.user-profile__twoots-wrapper {
+    display: grid;
+    grid-gap: 10px;
+}
+
+.user-profile__create-twoot {
+    border-top: 1px solid  purple;
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
 }
 
 </style>
